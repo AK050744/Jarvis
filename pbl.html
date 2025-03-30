@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Jarvis AI Assistant</title>
+    
+</head>
+<body>
+    <h1>Jarvis AI Assistant</h1>
+    <button onclick="startListening() ">Speak</button>
+    <div id="output">Waiting for command...</div>
+    
+    <script>
+        const socket = new WebSocket("ws://localhost:8000/ws");
+
+socket.onopen = function () {
+    console.log("✅ WebSocket Connected");
+    document.getElementById("output").innerText = "WebSocket Connected";
+};
+
+socket.onerror = function (error) {
+    console.error("❌ WebSocket Error:", error);
+};
+
+socket.onclose = function () {
+    console.warn("🔴 WebSocket Connection Closed");
+    document.getElementById("output").innerText = "WebSocket Disconnected";
+};
+
+socket.onmessage = function (event) {
+    console.log("🟢 Response from Jarvis:", event.data);
+    document.getElementById("output").innerText = "Jarvis: " + event.data;
+};
+
+        // Create a WebSocket connection
+        const socket = new WebSocket("ws://localhost:8000/ws");
+
+    
+        // Log connection status
+        socket.onopen = function() {
+            console.log("✅ Connected to WebSocket");
+        };
+    
+        socket.onerror = function(error) {
+            console.error("❌ WebSocket Error:", error);
+        };
+    
+        socket.onmessage = function(event) {
+            console.log("🟢 Jarvis Response:", event.data);
+            document.getElementById("output").innerText = "Jarvis: " + event.data;
+        };
+    
+        socket.onclose = function() {
+            console.warn("🔴 WebSocket Connection Closed");
+        };
+    
+        function startListening() {
+            console.log("🎤 Voice Recognition Started...");
+    
+            // Initialize speech recognition
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.start();
+            
+            recognition.onresult = function(event) {
+                const command = event.results[0][0].transcript;
+                console.log("🗣 You said:", command);
+                document.getElementById("output").innerText = "You said: " + command;
+    
+                if (socket.readyState === WebSocket.OPEN) {
+                    socket.send(command);
+                    console.log("📤 Command Sent to Jarvis");
+                } else {
+                    console.error("❌ WebSocket is not connected");
+                }
+            };
+    
+            recognition.onerror = function(event) {
+                console.error("❌ Speech Recognition Error:", event.error);
+            };
+        }
+    </script>
+    
+</body>
+</html>
