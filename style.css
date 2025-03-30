@@ -1,0 +1,27 @@
+body{
+    background-image : url('image.jpg');
+    background-size: cover;
+    font-family: cursive;
+    text-align: center;
+}
+
+h1{
+    padding-top: 150px;
+    color: white;
+}
+
+button {
+     margin-top: 10px; 
+     padding: 10px 20px; 
+     font-size: 16px; 
+}
+
+#output { 
+    margin-top: 20px; 
+    padding: 10px;
+    border: 1px solid rgb(255, 255, 255); 
+    color: white;
+    min-height: 50px; 
+    transform: scale(1.0);
+    text-decoration: none;
+}
